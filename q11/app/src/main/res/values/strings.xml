@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">q11</string>
+    <string name="edit_text_placeholder">文字列を入力してください。</string>
+</resources>
