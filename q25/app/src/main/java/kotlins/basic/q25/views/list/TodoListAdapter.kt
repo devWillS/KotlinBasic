@@ -11,23 +11,32 @@ class TodoListAdapter(
     var todoList: List<Todo>,
     var listener: TodoAdapterListener
 ) : RecyclerView.Adapter<TodoListViewHolder>() {
+    interface TodoAdapterListener {
+        fun selectedTodo(todo: Todo)
+        fun onLongClicked(deleteId: Int)
+    }
+
     override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
+
         holder.title.text = todoList[position].title
         holder.limit.text = DateUtil.toString(todoList[position].limitDate, DateUtil.DateFormat.HyphenYearToDay)
 
         holder.itemView.setOnClickListener {
-            val position = holder.adapterPosition
-            val todo = todoList[position]
+            val adapterPosition = holder.adapterPosition
+            val todo = todoList[adapterPosition]
             listener.selectedTodo(todo)
+        }
+
+        holder.itemView.setOnLongClickListener {
+            val adapterPosition = holder.adapterPosition
+            val todo = todoList[adapterPosition]
+            listener.onLongClicked(todo.todoId)
+            return@setOnLongClickListener true
         }
     }
 
     override fun getItemCount(): Int {
         return todoList.size
-    }
-
-    interface TodoAdapterListener {
-        fun selectedTodo(todo: Todo)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {

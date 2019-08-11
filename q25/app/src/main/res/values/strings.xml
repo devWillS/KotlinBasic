@@ -5,4 +5,7 @@
     <string name="contentLabel">内容</string>
     <string name="contentHint">内容を入力・・・</string>
     <string name="registerButtonText">登録</string>
+
+    <string name="deleteTitle">確認</string>
+    <string name="deleteMessage">Todoを削除しますか？</string>
 </resources>
