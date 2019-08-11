@@ -13,16 +13,24 @@ import kotlins.basic.q25.utils.TodoUtil
 import kotlins.basic.q25.views.register.TodoRegisterActivity
 import kotlinx.android.synthetic.main.activity_todo_list.*
 
-class TodoListActivity : AppCompatActivity(), TodoListAdapter.TodoAdapterListener, AlertDialogUtil.DialogUtilListener {
+class TodoListActivity : AppCompatActivity(), TodoListContracts.Presenter {
 
-    private lateinit var adapter: TodoListAdapter
+    private val model: TodoListContracts.Model = TodoListModel()
+    private lateinit var view: TodoListContracts.View
+
     private var todoList: ArrayList<Todo> = ArrayList()
-    private var deleteId: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_todo_list)
 
+    }
+
+    override fun onStart() {
+        super.onStart()
+        model.setPresenter(this)
+        view = todoListFragment as TodoListFragment
+        view.setPresenter(this)
         setupView()
     }
 
@@ -32,54 +40,33 @@ class TodoListActivity : AppCompatActivity(), TodoListAdapter.TodoAdapterListene
     }
 
     private fun setupView() {
-        registerTodoButton.setOnClickListener {
-            val intent = Intent(this, TodoRegisterActivity::class.java)
-            intent.putExtra("editStatus", EditStatus.NEW)
-            startActivity(intent)
-        }
-
-
-
-        adapter = TodoListAdapter(todoList, this)
-
-        val llm = LinearLayoutManager(this)
-        todoListRecyclerView.addItemDecoration(DividerItemDecoration(this))
-        todoListRecyclerView.setHasFixedSize(true)
-        todoListRecyclerView.layoutManager = llm
-        todoListRecyclerView.adapter = adapter
-
+        view.setupView(todoList)
         reloadTodoList()
     }
 
     private fun reloadTodoList() {
         todoList.clear()
-        todoList.addAll(TodoUtil.getTodoList())
-        adapter.notifyDataSetChanged()
+        todoList.addAll(model.getAllTodo())
+        view.notifyDataSetChanged()
     }
 
-    override fun selectedTodo(todo: Todo) {
+    override fun registerTodoButtonClicked() {
+        val intent = Intent(this, TodoRegisterActivity::class.java)
+        intent.putExtra("editStatus", EditStatus.NEW)
+        startActivity(intent)
+    }
+
+    override fun todoSelected(position: Int) {
+        val todo = todoList.get(position)
         val intent = Intent(application, TodoRegisterActivity::class.java)
         intent.putExtra("editStatus", EditStatus.EDIT)
         intent.putExtra("todo", todo.todoId)
         startActivity(intent)
     }
 
-    override fun onLongClicked(position: Int) {
-        deleteId = position
-        AlertDialogUtil.createDialog(this,R.string.deleteTitle,R.string.deleteMessage, this)
-    }
-
-    override fun onPositive() {
-        if (deleteId == -1) {
-            return
-        }
-
-        TodoUtil.deleteTodo(deleteId)
+    override fun deletePosition(position: Int) {
+        val todoId = todoList.get(position).todoId
+        model.deleteTodo(todoId)
         reloadTodoList()
-        deleteId = -1
-    }
-
-    override fun onNegative() {
-        deleteId = -1
     }
 }

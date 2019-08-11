@@ -73,6 +73,7 @@ class CustomDialog( mc: Context) {
             // 実際は AlertDialog を使用
             val dialogBuilder = AlertDialog.Builder(activity!!)
             // ここで、設定　
+            this.isCancelable = false
             if (mTitle.isNotEmpty()) {
                 dialogBuilder.setTitle(mTitle)
             } else {

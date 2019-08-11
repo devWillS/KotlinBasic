@@ -1,7 +1,9 @@
 package kotlins.basic.q15
 
+import android.content.Context
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.FragmentManager
 
 object AlertDialogUtil {
     interface DialogUtilListener {
@@ -9,7 +11,13 @@ object AlertDialogUtil {
         fun onNegative()
     }
 
-    fun createDialog(activity: AppCompatActivity, title: Int, messageId: Int, listener: DialogUtilListener?) {
+    fun createDialog(
+        activity: Context,
+        fragmentManager: FragmentManager,
+        title: Int,
+        messageId: Int,
+        listener: DialogUtilListener?
+    ) {
         val customDialog = CustomDialog(activity)
         customDialog.dialogTitle = activity.getString(title)
         customDialog.dialogMessage = activity.getString(messageId)
@@ -20,6 +28,6 @@ object AlertDialogUtil {
         customDialog.onCancelClickListener = DialogInterface.OnClickListener { _, _ ->
             listener?.onNegative()
         }
-        customDialog.openDialog(activity.supportFragmentManager)
+        customDialog.openDialog(fragmentManager)
     }
 }
