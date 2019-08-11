@@ -10,7 +10,9 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".views.TodoRegisterActivity">
+        </activity>
+        <activity android:name=".views.TodoListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

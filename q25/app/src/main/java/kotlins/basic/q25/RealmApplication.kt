@@ -10,9 +10,8 @@ class RealmApplication : Application(){
  
         Realm.init(this) //設定(初期化)
         val realmConfiguration = RealmConfiguration.Builder()
-            .deleteRealmIfMigrationNeeded()
             .schemaVersion(0)
             .build()
-        Realm.getInstance(realmConfiguration)
+        Realm.setDefaultConfiguration(realmConfiguration)
     }
 }
