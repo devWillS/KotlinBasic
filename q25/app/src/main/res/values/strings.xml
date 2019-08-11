@@ -8,4 +8,7 @@
 
     <string name="deleteTitle">確認</string>
     <string name="deleteMessage">Todoを削除しますか？</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

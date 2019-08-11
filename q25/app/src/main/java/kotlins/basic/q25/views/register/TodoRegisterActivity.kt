@@ -8,9 +8,13 @@ import kotlins.basic.q25.models.entity.Todo
 import kotlins.basic.q25.utils.TodoUtil
 import kotlinx.android.synthetic.main.activity_todo_register.*
 
-class TodoRegisterActivity : AppCompatActivity() {
+class TodoRegisterActivity : AppCompatActivity(), TodoRegisterContracts.Presenter {
+    private val model: TodoRegisterContracts.Model = TodoRegisterModel()
+    private lateinit var view: TodoRegisterContracts.View
     lateinit var editStatus: EditStatus
     lateinit var todo: Todo
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,44 +22,49 @@ class TodoRegisterActivity : AppCompatActivity() {
 
         editStatus = intent.extras?.get("editStatus") as EditStatus
 
+
+    }
+
+    override fun onStart() {
+        super.onStart()
+        view = todoRegisterFragment as TodoRegisterFragment
         setupView()
     }
 
     private fun setupView() {
+        model.setPresenter(this)
+        view.setPresenter(this)
+
         when (editStatus) {
             EditStatus.NEW ->
-                toolbar.title = "新規ToDo"
+                view.setupView(null)
             EditStatus.EDIT -> {
                 todo = TodoUtil.getTodo(intent.getIntExtra("todo", 1))
-                toolbar.title = todo.title
-                titleEditText.setText(todo.title)
-                contentEditText.setText(todo.contents)
+                view.setupView(todo)
             }
         }
+    }
 
-        registerButton.setOnClickListener {
-            val title = titleEditText.text.toString()
-            if (title.isEmpty()) {
-                titleEditText.error = "Please enter title"
-                return@setOnClickListener
+    override fun registerClicked(title: String, content: String) {
+        if (title.isEmpty()) {
+            view.titleEditTextError()
+            return
+        }
+
+        if (content.isEmpty()) {
+            view.contentEditTextError()
+            return
+        }
+
+        when (editStatus) {
+            EditStatus.NEW -> {
+                model.add(title, content)
+                finish()
             }
 
-            val content = contentEditText.text.toString()
-            if (content.isEmpty()) {
-                contentEditText.error = "Please enter content"
-                return@setOnClickListener
-            }
-
-            when (editStatus) {
-                EditStatus.NEW -> {
-                    TodoUtil.add(title, content)
-                    finish()
-                }
-
-                EditStatus.EDIT -> {
-                    TodoUtil.update(todo, title, content)
-                    finish()
-                }
+            EditStatus.EDIT -> {
+                model.update(todo, title, content)
+                finish()
             }
         }
     }

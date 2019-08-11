@@ -12,8 +12,8 @@ class TodoListAdapter(
     var listener: TodoAdapterListener
 ) : RecyclerView.Adapter<TodoListViewHolder>() {
     interface TodoAdapterListener {
-        fun selectedTodo(todo: Todo)
-        fun onLongClicked(deleteId: Int)
+        fun onClicked(position: Int)
+        fun onLongClicked(position: Int)
     }
 
     override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
@@ -23,14 +23,12 @@ class TodoListAdapter(
 
         holder.itemView.setOnClickListener {
             val adapterPosition = holder.adapterPosition
-            val todo = todoList[adapterPosition]
-            listener.selectedTodo(todo)
+            listener.onClicked(adapterPosition)
         }
 
         holder.itemView.setOnLongClickListener {
             val adapterPosition = holder.adapterPosition
-            val todo = todoList[adapterPosition]
-            listener.onLongClicked(todo.todoId)
+            listener.onLongClicked(adapterPosition)
             return@setOnLongClickListener true
         }
     }
