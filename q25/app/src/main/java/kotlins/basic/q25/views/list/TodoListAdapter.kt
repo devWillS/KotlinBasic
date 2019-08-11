@@ -8,15 +8,26 @@ import kotlins.basic.q25.models.entity.Todo
 import kotlins.basic.q25.utils.DateUtil
 
 class TodoListAdapter(
-    var todoList: List<Todo>
+    var todoList: List<Todo>,
+    var listener: TodoAdapterListener
 ) : RecyclerView.Adapter<TodoListViewHolder>() {
     override fun onBindViewHolder(holder: TodoListViewHolder, position: Int) {
         holder.title.text = todoList[position].title
         holder.limit.text = DateUtil.toString(todoList[position].limitDate, DateUtil.DateFormat.HyphenYearToDay)
+
+        holder.itemView.setOnClickListener {
+            val position = holder.adapterPosition
+            val todo = todoList[position]
+            listener.selectedTodo(todo)
+        }
     }
 
     override fun getItemCount(): Int {
         return todoList.size
+    }
+
+    interface TodoAdapterListener {
+        fun selectedTodo(todo: Todo)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TodoListViewHolder {
