@@ -1,6 +1,7 @@
 package kotlins.basic.q25.utils
 
 import io.realm.Realm
+import io.realm.Sort
 import kotlins.basic.q25.models.entity.Todo
 import java.util.*
 
@@ -36,6 +37,13 @@ object TodoUtil {
         realm.copyToRealmOrUpdate(todo)
 
         realm.commitTransaction()
+    }
+
+    fun getTodoList(): List<Todo> {
+        val realm = Realm.getDefaultInstance()
+        val result = realm.where(Todo::class.java).sort("limitDate", Sort.ASCENDING)
+
+        return result.findAll().toList()
     }
 
     fun getTodo(todoId: Int): Todo {
