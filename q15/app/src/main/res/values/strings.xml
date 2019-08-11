@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">q15</string>
+    <string name="dialog_title">DialogTitle</string>
+    <string name="dialog_message">DialogMessage</string>
+    <string name="click_here">Click Here</string>
+</resources>
