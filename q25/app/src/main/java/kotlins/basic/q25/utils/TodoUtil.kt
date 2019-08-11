@@ -41,7 +41,9 @@ object TodoUtil {
 
     fun getTodoList(): List<Todo> {
         val realm = Realm.getDefaultInstance()
-        val result = realm.where(Todo::class.java).sort("limitDate", Sort.ASCENDING)
+        val result = realm.where(Todo::class.java)
+            .sort("limitDate", Sort.ASCENDING)
+            .equalTo("deleteFlg", false)
 
         return result.findAll().toList()
     }
@@ -51,6 +53,16 @@ object TodoUtil {
         val result = realm.where(Todo::class.java).equalTo("todoId", todoId)
 
         return result.findFirst()!!
+    }
+
+    fun deleteTodo(todoId: Int) {
+        val todo = getTodo(todoId)
+        val realm = Realm.getDefaultInstance()
+        realm.beginTransaction()
+        todo.deleteFlg = true
+        realm.copyToRealmOrUpdate(todo)
+
+        realm.commitTransaction()
     }
 
     private fun createNewId(): Int {
