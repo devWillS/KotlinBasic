@@ -1,4 +1,4 @@
-package kotlins.basic.q25.views
+package kotlins.basic.q25.views.register
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
