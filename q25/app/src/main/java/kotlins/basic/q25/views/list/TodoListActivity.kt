@@ -12,7 +12,7 @@ import kotlins.basic.q25.utils.TodoUtil
 import kotlins.basic.q25.views.register.TodoRegisterActivity
 import kotlinx.android.synthetic.main.activity_todo_list.*
 
-class TodoListActivity : AppCompatActivity() {
+class TodoListActivity : AppCompatActivity(), TodoListAdapter.TodoAdapterListener {
 
     private lateinit var adapter: TodoListAdapter
     private var todoList: ArrayList<Todo> = ArrayList()
@@ -38,7 +38,7 @@ class TodoListActivity : AppCompatActivity() {
 
 
 
-        adapter = TodoListAdapter(todoList)
+        adapter = TodoListAdapter(todoList, this)
 
         val llm = LinearLayoutManager(this)
         todoListRecyclerView.addItemDecoration(DividerItemDecoration(this))
@@ -53,5 +53,12 @@ class TodoListActivity : AppCompatActivity() {
         todoList.clear()
         todoList.addAll(TodoUtil.getTodoList() as ArrayList<Todo>)
         adapter.notifyDataSetChanged()
+    }
+
+    override fun selectedTodo(todo: Todo) {
+        val intent = Intent(application, TodoRegisterActivity::class.java)
+        intent.putExtra("editStatus", EditStatus.EDIT)
+        intent.putExtra("todo", todo.todoId)
+        startActivity(intent)
     }
 }
