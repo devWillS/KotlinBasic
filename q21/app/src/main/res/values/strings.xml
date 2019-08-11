@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">q21</string>
+    <string name="first_fragment">firstFragment</string>
+    <string name="second_fragment">secondFragment</string>
+</resources>
