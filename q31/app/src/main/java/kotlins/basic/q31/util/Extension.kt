@@ -6,3 +6,5 @@ inline fun <T> guard(value: T?, ifNull: () -> Unit): T {
     ifNull()
     throw Exception("Guarded from null!")
 }
+
+internal inline fun <reified T : Any> objectOf() = T::class.java
