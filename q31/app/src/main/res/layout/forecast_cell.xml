@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+            android:id="@+id/linear"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            tools:ignore="UselessParent">
+        <ImageView
+                android:id="@+id/iconImageView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:contentDescription="@string/forecasticon"/>
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+            <TextView
+                    android:id="@+id/dateLabelTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.5"
+                    android:singleLine="false"
+                    android:textSize="20sp"
+                    tools:text="予報日"/>
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/telopTextView" android:layout_weight="0.5"
+                    android:textSize="20sp" tools:text="天気"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
