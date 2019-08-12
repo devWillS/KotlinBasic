@@ -1,5 +1,6 @@
 package kotlins.basic.q31.views
 
+import android.content.Context
 import kotlins.basic.q31.common.mvp.BaseModel
 import kotlins.basic.q31.common.mvp.BasePresenter
 import kotlins.basic.q31.common.mvp.BaseView
@@ -11,7 +12,7 @@ import kotlins.basic.q31.models.entities.Weather
 interface MainContracts {
     interface Model : BaseModel<Presenter> {
         fun getForecasts()
-        fun setupRoom()
+        fun setupRoom(context: Context)
         fun saveData(description: Description, forecastList: List<Forecast>)
         fun getData(): ResponseData
     }

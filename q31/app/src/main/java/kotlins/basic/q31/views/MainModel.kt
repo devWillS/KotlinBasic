@@ -14,9 +14,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainModel(
-    val context: Context
-) : MainContracts.Model {
+class MainModel : MainContracts.Model {
 
     private lateinit var presenter: MainContracts.Presenter
 
@@ -45,7 +43,7 @@ class MainModel(
         })
     }
 
-    override fun setupRoom() {
+    override fun setupRoom(context: Context) {
         weatherDatabase = Room.databaseBuilder(context, objectOf<WeatherDatabase>(), "weather.db").allowMainThreadQueries().build()
     }
 
