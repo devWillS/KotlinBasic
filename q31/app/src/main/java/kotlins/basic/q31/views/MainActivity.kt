@@ -9,7 +9,7 @@ import kotlins.basic.q31.util.guard
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContracts.Presenter {
-    private val model = MainModel()
+    private val model = MainModel(this)
     private lateinit var view: MainContracts.View
 
     private lateinit var weather: Weather
@@ -26,11 +26,13 @@ class MainActivity : AppCompatActivity(), MainContracts.Presenter {
         view.setPresenter(this)
         view.setupView(forecastList)
         model.setPresenter(this)
+        model.setupRoom()
         model.getForecasts()
     }
 
     override fun receivedForecasts(weather: Weather) {
         this.weather = weather
+
 
         weather.forecasts?.let {
             forecastList.clear()
@@ -41,10 +43,21 @@ class MainActivity : AppCompatActivity(), MainContracts.Presenter {
         weather.description?.text?.let {
             view.setDescriptionText(it)
         }
+
+        model.saveData(weather.description!!,weather.forecasts!!)
     }
 
     override fun receivedError() {
         println("API: Received Error")
+        val resposeData = model.getData()
+
+        forecastList.clear()
+        forecastList.addAll(resposeData.forecastList)
+        view.reloadForecastListData()
+
+        resposeData.description.text?.let {
+            view.setDescriptionText(it)
+        }
     }
 
     override fun getItems(): Array<CharSequence>? {

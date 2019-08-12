@@ -1,15 +1,26 @@
 package kotlins.basic.q31.views
 
+import android.content.Context
+import androidx.room.Room
 import kotlins.basic.q31.models.api.APIService
 import kotlins.basic.q31.models.api.WeatherHacksInterface
+import kotlins.basic.q31.models.db.ResponseData
+import kotlins.basic.q31.models.db.WeatherDatabase
+import kotlins.basic.q31.models.entities.Description
+import kotlins.basic.q31.models.entities.Forecast
 import kotlins.basic.q31.models.entities.Weather
+import kotlins.basic.q31.util.objectOf
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class MainModel : MainContracts.Model {
+class MainModel(
+    val context: Context
+) : MainContracts.Model {
 
     private lateinit var presenter: MainContracts.Presenter
+
+    private lateinit var weatherDatabase: WeatherDatabase
 
     override fun setPresenter(presenter: MainContracts.Presenter) {
         this.presenter = presenter
@@ -32,5 +43,30 @@ class MainModel : MainContracts.Model {
                 presenter.receivedError()
             }
         })
+    }
+
+    override fun setupRoom() {
+        weatherDatabase = Room.databaseBuilder(context, objectOf<WeatherDatabase>(), "weather.db").allowMainThreadQueries().build()
+    }
+
+    override fun saveData(description: Description, forecastList: List<Forecast>) {
+        val descriptionDao = weatherDatabase.descriptionDao()
+        descriptionDao.deleteALL()
+        descriptionDao.insertEntity(description)
+
+        val forecastDao = weatherDatabase.forecastDao()
+        forecastDao.deleteALL()
+        forecastDao.insertEntities(forecastList)
+    }
+
+    override fun getData(): ResponseData {
+
+        val descriptionDao = weatherDatabase.descriptionDao()
+        val description = descriptionDao.getNewest()
+
+        val forecastDao = weatherDatabase.forecastDao()
+        val forecastList = forecastDao.getList()
+
+        return ResponseData(description,forecastList)
     }
 }
