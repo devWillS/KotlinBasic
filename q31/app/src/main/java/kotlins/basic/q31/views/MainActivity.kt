@@ -3,6 +3,7 @@ package kotlins.basic.q31.views
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import kotlins.basic.q31.R
+import kotlins.basic.q31.models.entities.Forecast
 import kotlins.basic.q31.models.entities.Weather
 import kotlins.basic.q31.util.guard
 import kotlinx.android.synthetic.main.activity_main.*
@@ -12,6 +13,7 @@ class MainActivity : AppCompatActivity(), MainContracts.Presenter {
     private lateinit var view: MainContracts.View
 
     private lateinit var weather: Weather
+    private var forecastList: ArrayList<Forecast> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,13 +24,23 @@ class MainActivity : AppCompatActivity(), MainContracts.Presenter {
         super.onStart()
         view = mainFragment as MainFragment
         view.setPresenter(this)
-        view.setupView()
+        view.setupView(forecastList)
         model.setPresenter(this)
         model.getForecasts()
     }
 
     override fun receivedForecasts(weather: Weather) {
         this.weather = weather
+
+        weather.forecasts?.let {
+            forecastList.clear()
+            forecastList.addAll(it)
+            view.reloadForecastListData()
+        }
+
+        weather.description?.text?.let {
+            view.setDescriptionText(it)
+        }
     }
 
     override fun receivedError() {

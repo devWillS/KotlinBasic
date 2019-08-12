@@ -1,21 +1,21 @@
 package kotlins.basic.q31.views
 
 
-import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-
+import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlins.basic.q31.R
-import kotlins.basic.q31.common.ForecastDialogFragment
-import kotlins.basic.q31.util.guard
+import kotlins.basic.q31.common.DividerItemDecoration
+import kotlins.basic.q31.models.entities.Forecast
 import kotlinx.android.synthetic.main.fragment_main.*
 
-class MainFragment : Fragment(), MainContracts.View, DialogInterface.OnClickListener {
+class MainFragment : Fragment(), MainContracts.View {
 
     private lateinit var presenter: MainContracts.Presenter
+    private lateinit var adapter : ForecastAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,17 +28,22 @@ class MainFragment : Fragment(), MainContracts.View, DialogInterface.OnClickList
         this.presenter = presenter
     }
 
-    override fun setupView() {
-        button.setOnClickListener {
-            val items: Array<CharSequence> = guard(presenter.getItems()) {
-                println("DateLabel Error")
-            }
+    override fun setupView(forecastList: List<Forecast>) {
 
-            val dialogFragment = ForecastDialogFragment(items, this)
-            dialogFragment.show(fragmentManager,"forecast")
-        }
+        adapter = ForecastAdapter(forecastList)
+
+        val llm = LinearLayoutManager(context)
+        forecastRecyclerView.addItemDecoration(DividerItemDecoration(context!!))
+        forecastRecyclerView.setHasFixedSize(true)
+        forecastRecyclerView.layoutManager = llm
+        forecastRecyclerView.adapter = adapter
     }
-    override fun onClick(p0: DialogInterface?, p1: Int) {
-        presenter.forecastSelected(p1)
+
+    override fun reloadForecastListData() {
+        adapter.notifyDataSetChanged()
+    }
+
+    override fun setDescriptionText(text: String) {
+        descriptionTextView.text = text
     }
 }

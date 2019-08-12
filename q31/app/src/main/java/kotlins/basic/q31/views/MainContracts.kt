@@ -3,6 +3,7 @@ package kotlins.basic.q31.views
 import kotlins.basic.q31.common.mvp.BaseModel
 import kotlins.basic.q31.common.mvp.BasePresenter
 import kotlins.basic.q31.common.mvp.BaseView
+import kotlins.basic.q31.models.entities.Forecast
 import kotlins.basic.q31.models.entities.Weather
 
 interface MainContracts {
@@ -11,7 +12,9 @@ interface MainContracts {
     }
 
     interface View : BaseView<Presenter> {
-        fun setupView()
+        fun setupView(forecastList: List<Forecast>)
+        fun reloadForecastListData()
+        fun setDescriptionText(text: String)
     }
 
     interface Presenter : BasePresenter {
