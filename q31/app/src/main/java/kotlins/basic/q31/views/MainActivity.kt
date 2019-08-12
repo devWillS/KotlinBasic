@@ -9,7 +9,7 @@ import kotlins.basic.q31.util.guard
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MainContracts.Presenter {
-    private val model = MainModel(this)
+    private val model = MainModel()
     private lateinit var view: MainContracts.View
 
     private lateinit var weather: Weather
@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), MainContracts.Presenter {
         view.setPresenter(this)
         view.setupView(forecastList)
         model.setPresenter(this)
-        model.setupRoom()
+        model.setupRoom(this)
         model.getForecasts()
     }
 
